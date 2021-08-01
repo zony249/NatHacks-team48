@@ -1,0 +1,5 @@
+# Instructions
+
+1. After cloning repo, create the folders `rest_dataset`, `rest_label`, and `rest_dataset_preproc`
+2. Download the dataset from [https://openneuro.org/datasets/ds003478/versions/1.1.0](https://openneuro.org/datasets/ds003478/versions/1.1.0). **Make sure you download it into the `rest_dataset`** folder
+3. Download the labels and move it into the `rest_label` folder. The labels should be a `.tsv` file from the same website
