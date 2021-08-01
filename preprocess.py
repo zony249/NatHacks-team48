@@ -10,7 +10,7 @@ from scipy import signal
 import pylab
 from PIL import Image
 
-LABELS_PATH = os.path.join("rest_label", "participants.tsv")
+LABELS_PATH = "rest_label"
 DATA_PATH = "rest_dataset"
 PREPROCESSED = "rest_dataset_preproc"
 
@@ -23,6 +23,8 @@ class Data_Index():
 
     def populate(self, data_path=DATA_PATH, labels_path=LABELS_PATH, preproc_path=PREPROCESSED, preprocess_all=False):
         
+        labels_tsv = pd.read_csv(glob.glob(labels_path + "/" + "*.tsv")[-1], sep="\t")
+        
         for subject_path in glob.iglob(data_path + "/" + "sub*"):
             #print(subject_path)
             subj_name = subject_path.split("/")[-1]
@@ -34,7 +36,12 @@ class Data_Index():
                 self.trainset[subj_name].append(preprocessed_path)
                 if preprocess_all == True:
                     self.preprocess_step(pth, preprocessed_path)
-                
+        
+            if labels_tsv.loc[labels_tsv[labels_tsv["participant_id"] == subj_name].index.values, "BDI"].values[-1] > 11:
+                self.labels[subj_name] = 1
+            else:
+                self.labels[subj_name] = 0
+        print(self.labels)
     def preprocess_step(self, old_path, new_path):
         raw = mne.io.read_raw_eeglab(old_path)
         sf = raw.info["sfreq"]
